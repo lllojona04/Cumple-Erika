@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feliz cumpleaños Erika</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg,#ffe4ef,#fff8fb);
+  font-family: Arial, sans-serif;
+  color: #654354;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  padding: 30px 20px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 10px 35px #bd668b30;
+  position: relative;
+  overflow: hidden;
+}
+
+h1 {
+  font-family: Georgia, serif;
+  font-size: 55px;
+  color: #bd668b;
+  margin: 15px 0 5px;
+}
+
+.age {
+  font-size: 30px;
+  color: #d38aa7;
+  margin-bottom: 30px;
+}
+
+button {
+  background: #bd668b;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 16px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #a94f76;
+}
+
+#surprise {
+  display: none;
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  margin-top: 15px;
+}
+
+.message {
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 20px 0;
+}
+
+#confetti {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+</style>
+</head>
+
+<body>
+
+<main class="card">
+
+<canvas id="confetti"></canvas>
+
+<section id="intro">
+
+<div style="font-size:40px">🎀✨🎀</div>
+
+<p>HOY ES UN DÍA ESPECIAL</p>
+
+<h1>ERIKA</h1>
+
+<div class="age">¡13 AÑOS! 🎂</div>
+
+<button onclick="openSurprise()">
+💌 Una sorpresa para ti
+</button>
+
+</section>
+
+<section id="surprise">
+
+<h2>🥳 ¡Feliz cumpleaños, Erika!</h2>
+
+<img src="./img/image.png" class="photo"
+alt="Foto de cumpleaños">
+
+<p class="message">
+¡Muchas felicidades, Erika!
+Espero que pases un día genial
+y disfrutes mucho de tus 13.
+¡Un besito grande! ❤️
+</p>
+
+<div style="font-size:30px">
+🎈🎂💕🎉
+</div>
+
+<p>¡Que todos tus deseos se cumplan! 💗</p>
+
+</section>
+
+</main>
+
+<script>
+
+let animationId = null;
+
+function openSurprise() {
+
+  document.getElementById("intro").style.display = "none";
+
+  document.getElementById("surprise").style.display = "block";
+
+  launchConfetti();
+}
+
+function launchConfetti() {
+
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  const card = document.querySelector(".card");
+
+  canvas.width = card.clientWidth;
+  canvas.height = card.clientHeight;
+
+  // Detener una animación anterior
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+  }
+
+  const colors = [
+    "#ff8eb5",
+    "#ffd166",
+    "#a8dfc5",
+    "#c5a4ee",
+    "#ffad91"
+  ];
+
+  // Crear 180 confetis
+  let pieces = Array.from({length: 180}, () => ({
+    x: Math.random() * canvas.width,
+    y: -Math.random() * canvas.height,
+    size: 4 + Math.random() * 7,
+    speed: 2 + Math.random() * 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rotation: Math.random() * 360,
+    rotationSpeed: Math.random() * 8 - 4
+  }));
+
+  let frame = 0;
+  const totalFrames = 240;
+
+  function animate() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    pieces.forEach(piece => {
+
+      piece.y += piece.speed;
+      piece.rotation += piece.rotationSpeed;
+
+      piece.x += Math.sin(piece.y / 20) * 1.5;
+
+      ctx.save();
+
+      ctx.translate(piece.x, piece.y);
+      ctx.rotate(piece.rotation * Math.PI / 180);
+
+      ctx.fillStyle = piece.color;
+
+      ctx.fillRect(
+        -piece.size / 2,
+        -piece.size / 2,
+        piece.size,
+        piece.size * 1.5
+      );
+
+      ctx.restore();
+
+    });
+
+    frame++;
+
+    if (frame < totalFrames) {
+
+      animationId = requestAnimationFrame(animate);
+
+    } else {
+
+      // Borrar todos los confetis al terminar
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      animationId = null;
+    }
+  }
+
+  animate();
+}
+
+// Ajustar el lienzo al cambiar el tamaño de pantalla
+window.addEventListener("resize", () => {
+
+  const canvas = document.getElementById("confetti");
+  const card = document.querySelector(".card");
+
+  canvas.width = card.clientWidth;
+  canvas.height = card.clientHeight;
+
+});
+
+</script>
+
+</body>
+</html>
